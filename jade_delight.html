@@ -1,0 +1,231 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+	html, body, input {font-size: 20px;}
+    body{
+    	font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;}
+	table {
+	  border-collapse: collapse;
+	  width: 100%;
+	}
+	
+	th, td {
+	  padding: 8px;
+	  text-align: left;
+	  border-bottom: 1px solid #ddd;
+	}
+</style>
+<title>Jade Delight</title>
+</head>
+
+<body>
+<script language="javascript">
+
+function MenuItem(name, cost)
+{
+	this.name = name;
+	this.cost=cost;
+}
+
+menuItems = new Array(
+	new MenuItem("Chicken Chop Suey", 4.5),
+	new MenuItem("Sweet and Sour Pork", 6.25),
+	new MenuItem("Shrimp Lo Mein", 5.25),
+	new MenuItem("Moo Shi Chicken", 6.5),
+	new MenuItem("Fried Rice", 2.35)
+);
+
+function makeSelect(name, minRange, maxRange)
+{
+	var t= "";
+	t = "<select name='" + name + "' size='1'>";
+	for (j=minRange; j<=maxRange; j++)
+	   t += "<option>" + j + "</option>";
+	t += "</select>"; 
+	return t;
+}
+</script>
+
+<h1>Jade Delight</h1>
+<form>
+
+<p><b>First Name:</b> <br><input type="text"  name='fname' id = 'fname'/></p>
+<p><b>Last Name*:</b> <br><input type="text"  name='lname' id = 'lname'/></p>
+<p><b>Street:</b> <br><input type="text"  name='street' id = "street" /></p>
+<p><b>City:</b> <br><input type="text"  name='city' id = "city" /></p>
+<p><b>Phone*:</b> <br><input type="text"  name='phone' id='phone'/></p>
+<p> 
+	<input type="radio" id = "pickup_radio" name="p_or_d" value = "pickup" checked="checked"/>Pickup  
+	<input type="radio"  name='p_or_d' value = 'delivery'/>Delivery
+</p>
+<table border="0" cellpadding="3">
+  <tr>
+    <th>Select Item</th>
+    <th>Item Name</th>
+    <th>Cost Each</th>
+    <th>Total Cost</th>
+  </tr>
+<script language="javascript">
+  var s = "";
+  for (i=0; i< menuItems.length; i++)
+  {
+	  s += "<tr><td>";
+	  s += makeSelect("quan" + i, 0, 10);
+	  s += "</td><td>" + menuItems[i].name + "</td>";
+	  s += "<td> $ " + menuItems[i].cost.toFixed(2) + "</td>";
+	  s += "<td>$<input type='text' name='cost'/></td></tr>";
+  }
+  document.writeln(s);
+
+  for (var i = 0; i < menuItems.length; i++) {
+	  /* Checks if any quan is changed */
+	document.getElementsByName("quan" + i)[0].onchange = updateCost;
+  }
+
+  for (var j = 0; j < menuItems.length; j++){
+  	first_val = parseFloat("0");
+  	document.getElementsByName("cost")[j].value = first_val.toFixed(2);
+  }
+
+  function updateCost(event) {
+      var item = event.target; 
+      var index_of_item = item.name.slice(-1);
+      var quantity = item.value;   
+      var total_item = quantity * menuItems[index_of_item].cost;
+      var rounded_item = total_item.toFixed(2);
+      document.getElementsByName("cost")[index_of_item].value = rounded_item;
+
+      finalizeValues();
+  }
+</script>
+</table>
+<p> <b>Subtotal:</b> <br>
+   $<input type="text"  name='subtotal' id="subtotal" />
+</p>
+<p> <b>Mass tax 6.25%:</b> <br>
+  $<input type="text"  name='tax' id="tax" />
+</p>
+<p><b>Total:</b> <br> $<input type="text"  name='total' id="total" />
+</p>
+
+<script lang ="javascript">
+  var first_zero = parseFloat("0");
+  document.getElementById("subtotal").value = first_zero.toFixed(2);
+  document.getElementById("tax").value = first_zero.toFixed(2);
+  document.getElementById("total").value = first_zero.toFixed(2);
+
+	function finalizeValues() {
+		var subtotal = 0;
+		for (var i = 0; i < menuItems.length; i++) {
+			subtotal = parseFloat(subtotal);
+			if (document.getElementsByName("cost")[i].value == "") {
+				var zero = parseFloat("0");
+				document.getElementsByName("cost")[i].value = zero.toFixed(2);
+			}
+			var added_cost = document.getElementsByName("cost")[i].value;
+			subtotal += parseFloat(added_cost);
+		}
+		var float_subtotal_final = parseFloat(subtotal);
+		document.getElementById("subtotal").value = subtotal.toFixed(2);
+		document.getElementById("tax").value = (subtotal * 0.0625).toFixed(2);
+		document.getElementById("total").value = (subtotal + (subtotal * 0.0625)).toFixed(2);
+	}
+</script>
+
+
+<button type = "button" value = "Submit Order" onclick = "validate()"> Submit Order </button>
+
+<script lang = "javascript">
+	function validate() {
+		if (validatePhone() == false || validateLast() == false) {
+			if (validatePhone() == false) {
+				alert("Incorrect phone number format");
+			}
+			if (validateLast() == false) {
+				alert("Last name is required");
+			}
+			return;
+		}
+		pickupInfo();
+	}
+
+	function validatePhone() {
+		var inputPhone = document.getElementById("phone").value;
+		var validPhone = /^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/;
+		if (inputPhone.match(validPhone)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function validateLast() {
+		var lastname = document.getElementById("lname").value;
+		if (lastname != "") {
+			return true;
+		} else {
+			return false;
+		}
+		return;
+	}
+
+	function pickupInfo() {
+
+		var pickup = document.getElementById("pickup_radio").checked;
+		var street = document.getElementById("street").value;
+		var city = document.getElementById("city").value;
+		var date = new Date();
+		if (pickup == true) {
+				finaltime = add_minutes(15);
+				alert(
+				"Jade Delight thanks you. Your order will be ready at: " 
+				+ finaltime + " and your total is: $" + 
+				document.getElementById("total").value);
+		} else {
+			if (street == "" || city == "") {
+				alert("Street and city required for delivery");
+			} else {
+				finaltime = add_minutes(30);
+				alert(
+				"Jade Delight thanks you. Your expected delivery time is: "
+				+ finaltime + "and your total is: $" + 
+				document.getElementById("total").value);
+			}
+		}
+
+		function add_minutes (minutes_add) {
+			var date = new Date();
+			var hours = date.getHours();
+			var minutes = date.getMinutes();
+			minutes = minutes + minutes_add;
+			if (minutes > 59) {
+				minutes = minutes % 60;				
+				if (hours == 23) {
+					hours = 0;
+				} else {
+					hours += 1;
+				}
+			}
+			var finaltime = "";
+			if (hours < 10) {
+				finaltime += "0" + hours + ":";
+			} else {
+				finaltime += hours + ":";
+			}
+			if (minutes < 10) {
+				finaltime += "0" + minutes;
+			} else {
+				finaltime += minutes;
+			}
+			return finaltime;
+		}
+
+	}
+</script>
+
+</form>
+</body>
+</html>
