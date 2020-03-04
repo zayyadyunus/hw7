@@ -70,76 +70,37 @@ function makeSelect(name, minRange, maxRange)
     <th>Total Cost</th>
   </tr>
 <script language="javascript">
-  var s = "";
-  for (i=0; i< menuItems.length; i++)
-  {
-	  s += "<tr><td>";
-	  s += makeSelect("quan" + i, 0, 10);
-	  s += "</td><td>" + menuItems[i].name + "</td>";
-	  s += "<td> $ " + menuItems[i].cost.toFixed(2) + "</td>";
-	  s += "<td>$<input type='text' name='cost'/></td></tr>";
-  }
-  document.writeln(s);
-
-  for (var i = 0; i < menuItems.length; i++) {
-	  /* Checks if any quan is changed */
-	document.getElementsByName("quan" + i)[0].onchange = updateCost;
-  }
-
-  for (var j = 0; j < menuItems.length; j++){
-  	first_val = parseFloat("0");
-  	document.getElementsByName("cost")[j].value = first_val.toFixed(2);
-  }
-
-  function updateCost(event) {
-      var item = event.target; 
-      var index_of_item = item.name.slice(-1);
-      var quantity = item.value;   
-      var total_item = quantity * menuItems[index_of_item].cost;
-      var rounded_item = total_item.toFixed(2);
-      document.getElementsByName("cost")[index_of_item].value = rounded_item;
-
-      finalizeValues();
-  }
-</script>
-</table>
-<p> <b>Subtotal:</b> <br>
-   $<input type="text"  name='subtotal' id="subtotal" />
-</p>
-<p> <b>Mass tax 6.25%:</b> <br>
-  $<input type="text"  name='tax' id="tax" />
-</p>
-<p><b>Total:</b> <br> $<input type="text"  name='total' id="total" />
-</p>
-
-<script lang ="javascript">
-  var first_zero = parseFloat("0");
-  document.getElementById("subtotal").value = first_zero.toFixed(2);
-  document.getElementById("tax").value = first_zero.toFixed(2);
-  document.getElementById("total").value = first_zero.toFixed(2);
-
-	function finalizeValues() {
-		var subtotal = 0;
-		for (var i = 0; i < menuItems.length; i++) {
-			subtotal = parseFloat(subtotal);
-			if (document.getElementsByName("cost")[i].value == "") {
-				var zero = parseFloat("0");
-				document.getElementsByName("cost")[i].value = zero.toFixed(2);
-			}
-			var added_cost = document.getElementsByName("cost")[i].value;
-			subtotal += parseFloat(added_cost);
-		}
-		var float_subtotal_final = parseFloat(subtotal);
-		document.getElementById("subtotal").value = subtotal.toFixed(2);
-		document.getElementById("tax").value = (subtotal * 0.0625).toFixed(2);
-		document.getElementById("total").value = (subtotal + (subtotal * 0.0625)).toFixed(2);
+	var s = "";
+	for (i=0; i< menuItems.length; i++)
+	{
+		s += "<tr><td>";
+		s += makeSelect("quan" + i, 0, 10);
+		s += "</td><td>" + menuItems[i].name + "</td>";
+		s += "<td> $ " + menuItems[i].cost.toFixed(2) + "</td>";
+		s += "<td>$<input type='text' name='cost'/></td></tr>";
 	}
-</script>
+	document.writeln(s);
 
+	for (var i = 0; i < menuItems.length; i++) {
+		/* Checks if any quan is changed */
+		document.getElementsByName("quan" + i)[0].onchange = updateCost;
+	}
 
-<button type = "button" value = "Submit Order" onclick = "validate()"> Submit Order </button>
+	for (var j = 0; j < menuItems.length; j++){
+		first_val = parseFloat("0");
+		document.getElementsByName("cost")[j].value = first_val.toFixed(2);
+	}
 
-<script lang = "javascript">
+	function updateCost(event) {
+		var item = event.target; 
+		var index_of_item = item.name.slice(-1);
+		var quantity = item.value;   
+		var total_item = quantity * menuItems[index_of_item].cost;
+		var rounded_item = total_item.toFixed(2);
+		document.getElementsByName("cost")[index_of_item].value = rounded_item;
+
+		finalizeValues();
+	}
 	function validate() {
 		if (validatePhone() == false || validateLast() == false) {
 			if (validatePhone() == false) {
@@ -226,6 +187,43 @@ function makeSelect(name, minRange, maxRange)
 
 	}
 </script>
+
+</table>
+<p> <b>Subtotal:</b> <br>
+   $<input type="text"  name='subtotal' id="subtotal" />
+</p>
+<p> <b>Mass tax 6.25%:</b> <br>
+  $<input type="text"  name='tax' id="tax" />
+</p>
+<p><b>Total:</b> <br> $<input type="text"  name='total' id="total" />
+</p>
+
+<script lang ="javascript">
+  var first_zero = parseFloat("0");
+  document.getElementById("subtotal").value = first_zero.toFixed(2);
+  document.getElementById("tax").value = first_zero.toFixed(2);
+  document.getElementById("total").value = first_zero.toFixed(2);
+
+	function finalizeValues() {
+		var subtotal = 0;
+		for (var i = 0; i < menuItems.length; i++) {
+			subtotal = parseFloat(subtotal);
+			if (document.getElementsByName("cost")[i].value == "") {
+				var zero = parseFloat("0");
+				document.getElementsByName("cost")[i].value = zero.toFixed(2);
+			}
+			var added_cost = document.getElementsByName("cost")[i].value;
+			subtotal += parseFloat(added_cost);
+		}
+		var float_subtotal_final = parseFloat(subtotal);
+		document.getElementById("subtotal").value = subtotal.toFixed(2);
+		document.getElementById("tax").value = (subtotal * 0.0625).toFixed(2);
+		document.getElementById("total").value = (subtotal + (subtotal * 0.0625)).toFixed(2);
+	}
+</script>
+
+
+<button type = "button" value = "Submit Order" onclick = "validate()"> Submit Order </button>
 
 </form>
 </body>
